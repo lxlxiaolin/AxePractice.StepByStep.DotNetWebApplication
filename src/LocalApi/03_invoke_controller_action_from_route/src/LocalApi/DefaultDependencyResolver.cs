@@ -21,22 +21,22 @@ namespace LocalApi
          * directly calling its default constructor. So any controller without a 
          * default constructor will not be supported.
          */
+        public List<Type> ControllerTypes { get;}
 
         internal DefaultDependencyResolver(IEnumerable<Type> controllerTypes)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
+            ControllerTypes = new List<Type>(controllerTypes);
         }
 
         public object GetService(Type type)
         {
-            throw new NotImplementedException();
+            return ControllerTypes.Contains(type) ? Activator.CreateInstance(type) : null;
         }
 
+        public void Dispose()
+        {
+
+        }
         #endregion
     }
 }
