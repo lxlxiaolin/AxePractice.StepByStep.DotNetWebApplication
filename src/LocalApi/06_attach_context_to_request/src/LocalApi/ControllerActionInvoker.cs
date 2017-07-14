@@ -78,9 +78,18 @@ namespace LocalApi
          * HttpResponseMessage, while the Type of async return value is Task<HttpResponseMessage>.
          */
 
-        static Task<HttpResponseMessage> Execute(ActionDescriptor actionDescriptor, MethodInfo method)
+        static async Task<HttpResponseMessage> Execute(ActionDescriptor actionDescriptor, MethodInfo method)
         {
-            throw new NotImplementedException();
+            object response = method.Invoke(actionDescriptor.Controller, null);
+            if(response.GetType() == typeof(HttpResponseMessage))
+            {
+                return (HttpResponseMessage) response;
+            }
+            if(response.GetType() == typeof(Task<HttpResponseMessage>))
+            {
+                return await (Task<HttpResponseMessage>) response;
+            }
+            return new HttpResponseMessage(HttpStatusCode.InternalServerError);
         }
 
         #endregion

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Net.Http;
+using Microsoft.CSharp;
 
 namespace LocalApi.Routing
 {
@@ -19,6 +21,20 @@ namespace LocalApi.Routing
 
         public HttpRoute(string controllerName, string actionName, HttpMethod methodConstraint, string uriTemplate)
         {
+            if(controllerName == null) { throw new ArgumentNullException(nameof(controllerName)); }
+            if(actionName == null) { throw new ArgumentNullException(nameof(actionName)); }
+            if(methodConstraint == null) { throw new ArgumentNullException(nameof(methodConstraint)); }
+            if(uriTemplate == null) { throw new ArgumentException(nameof(controllerName)); }
+
+            CodeDomProvider provider = new CSharpCodeProvider();
+            if(!provider.IsValidIdentifier(controllerName))
+            {
+                throw new ArgumentException();
+            }
+            if(!provider.IsValidIdentifier(actionName))
+            {
+                throw new ArgumentException();
+            }
             ControllerName = controllerName;
             ActionName = actionName;
             MethodConstraint = methodConstraint;
