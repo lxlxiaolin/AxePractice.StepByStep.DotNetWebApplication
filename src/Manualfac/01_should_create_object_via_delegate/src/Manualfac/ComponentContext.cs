@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Manualfac
 {
@@ -13,10 +14,19 @@ namespace Manualfac
          * 
          * You can add non-public member functions or member variables as you like.
          */
+        readonly Dictionary<Type, Func<IComponentContext, object>> dic;
+        internal ComponentContext(Dictionary<Type, Func<IComponentContext, object>> dic)
+        {
+            this.dic = dic;
+        }
 
         public object ResolveComponent(Type type)
         {
-            throw new NotImplementedException();
+            if(dic.ContainsKey(type))
+            {
+                return dic[type](this);
+            }
+            throw new DependencyResolutionException();
         }
 
         #endregion
