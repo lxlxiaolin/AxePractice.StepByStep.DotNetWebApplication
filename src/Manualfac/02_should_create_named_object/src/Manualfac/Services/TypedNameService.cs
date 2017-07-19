@@ -12,22 +12,30 @@ namespace Manualfac.Services
 
         public TypedNameService(Type serviceType, string name)
         {
-            throw new NotImplementedException();
+            ServiceType = serviceType;
+            Name = name;
         }
+
+        public string Name { get; }
+
+        public Type ServiceType { get; }
 
         public bool Equals(TypedNameService other)
         {
-            throw new NotImplementedException();
+            if(other == null) return false;
+            return ServiceType == other.ServiceType && Name == other.Name;
         }
 
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            if(obj == null) return false;
+            if(obj.GetType() != typeof(TypedNameService)) return false;
+            return Equals((TypedNameService) obj);
         }
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            return ServiceType.GetHashCode() ^ Name.GetHashCode();
         }
 
         #endregion
