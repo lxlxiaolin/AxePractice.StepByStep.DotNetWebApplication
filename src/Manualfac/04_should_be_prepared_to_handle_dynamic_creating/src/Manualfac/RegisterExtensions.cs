@@ -44,9 +44,16 @@ namespace Manualfac
              * In order to reuse the code, we re-implement the extension method to replace the
              * instance member function.
              */
+            if(cb == null) throw new ArgumentNullException();
+            if(registration == null) throw new ArgumentNullException();
 
-            throw new NotImplementedException();
-
+            var builder = new RegistrationBuilder
+            {
+                Service = registration.Service,
+                Activator = registration.Activator
+            };
+            cb.RegisterCallback(registry => registry.Register(builder.Build()));
+            return builder;
             #endregion
         }
     }

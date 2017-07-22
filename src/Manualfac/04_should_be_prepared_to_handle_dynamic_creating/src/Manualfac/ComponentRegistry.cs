@@ -17,7 +17,8 @@ namespace Manualfac
              * implement the method.
              */
 
-            throw new NotImplementedException();
+            if(registration == null) throw new ArgumentNullException();
+            serviceInfos[registration.Service] = registration;
 
             #endregion
         }
@@ -29,10 +30,15 @@ namespace Manualfac
             /*
              * Please implement the method to get registration from the registered services.
              */
+            if(service == null) throw new ArgumentNullException();
 
+            if(serviceInfos.ContainsKey(service))
+            {
+                registration = serviceInfos[service];
+                return true;
+            }
             registration = null;
-            throw new NotImplementedException();
-
+            return false;
             #endregion
         }
     }
