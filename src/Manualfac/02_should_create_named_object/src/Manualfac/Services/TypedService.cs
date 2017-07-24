@@ -20,7 +20,8 @@ namespace Manualfac.Services
         public bool Equals(TypedService other)
         {
             if(other == null) return false;
-            return ServiceType == other.ServiceType;
+            return other.ServiceType == ServiceType;
+
         }
 
         public override bool Equals(object obj)
@@ -28,6 +29,7 @@ namespace Manualfac.Services
             if(obj == null) return false;
             if(obj.GetType() != typeof(TypedService)) return false;
             return Equals((TypedService) obj);
+
         }
 
         public override int GetHashCode()

@@ -23,7 +23,7 @@ namespace Manualfac.Services
         public bool Equals(TypedNameService other)
         {
             if(other == null) return false;
-            return ServiceType == other.ServiceType && Name == other.Name;
+            return other.Name == Name && other.ServiceType == ServiceType;
         }
 
         public override bool Equals(object obj)

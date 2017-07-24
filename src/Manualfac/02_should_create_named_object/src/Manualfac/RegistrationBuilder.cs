@@ -18,7 +18,6 @@ namespace Manualfac
 
             Service = new TypedService(typeof(TService));
             return this;
-
             #endregion
         }
 
