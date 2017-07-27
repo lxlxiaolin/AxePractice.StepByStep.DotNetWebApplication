@@ -20,14 +20,8 @@ namespace Manualfac
         public LifetimeScope(ComponentRegistry componentRegistry, ILifetimeScope parent)
         {
             if (componentRegistry == null) { throw new ArgumentNullException(nameof(componentRegistry));}
-
             this.componentRegistry = componentRegistry;
-
-            #region Please initialize root scope
-
-            throw new NotImplementedException();
-
-            #endregion
+            RootScope = parent ?? this;
         }
 
         public object ResolveComponent(Service service)
@@ -56,9 +50,22 @@ namespace Manualfac
              */
 
             #region Please implement this method
+            if(registration == null) throw new ArgumentNullException(nameof(registration));
 
-            throw new NotImplementedException();
-
+            if (registration.Sharing == InstanceSharing.Shared)
+            {
+                if (sharedInstances.ContainsKey(registration.Service))
+                {
+                    return sharedInstances[registration.Service];
+                }
+            }
+            object instance = registration.Activator.Activate(this);
+            if(registration.Sharing == InstanceSharing.Shared)
+            {
+                sharedInstances.Add(registration.Service, instance);
+            }
+            Disposer.AddItemsToDispose(instance);
+            return instance;
             #endregion
         }
 
@@ -69,8 +76,7 @@ namespace Manualfac
             /*
              * Create a child life-time scope in this method.
              */
-
-            throw new NotImplementedException();
+            return new LifetimeScope(componentRegistry, RootScope);
 
             #endregion
         }
@@ -84,8 +90,12 @@ namespace Manualfac
              * We extract this method for isolation of responsibility.
              */
 
-            throw new NotImplementedException();
-
+            ComponentRegistration registration;
+            if (!componentRegistry.TryGetRegistration(service, out registration))
+            {
+                throw new DependencyResolutionException(nameof(service));
+            }
+            return registration;
             #endregion
         }
 
