@@ -26,8 +26,10 @@ namespace Manualfac
         public LifetimeScope(ComponentRegistry componentRegistry, ILifetimeScope parent)
         {
             if (componentRegistry == null) { throw new ArgumentNullException(nameof(componentRegistry));}
-
-            this.componentRegistry = componentRegistry;
+            lock (syncObj)
+            {
+                this.componentRegistry = componentRegistry;
+            }
             RootScope = parent?.RootScope ?? this;
         }
 
@@ -46,17 +48,25 @@ namespace Manualfac
         {
             if (registration.Sharing == InstanceSharing.Shared)
             {
-                object component;
-                if (sharedInstances.TryGetValue(registration.Service, out component))
+                lock (syncObj)
                 {
-                    return component;
+                    object component;
+                    if (sharedInstances.TryGetValue(registration.Service, out component))
+                    {
+                        return component;
+                    }
                 }
             }
 
             object instance = registration.Activator.Activate(this);
-            Disposer.AddItemsToDispose(instance);
+            lock (syncObj)
+            {
+                Disposer.AddItemsToDispose(instance);
+            }
 
-            if (registration.Sharing == InstanceSharing.Shared)
+            if (registration.Sharing != InstanceSharing.Shared) return instance;
+
+            lock (syncObj)
             {
                 sharedInstances.Add(registration.Service, instance);
             }
@@ -84,7 +94,10 @@ namespace Manualfac
         {
             if (disposing)
             {
-                Disposer.Dispose();
+                lock (syncObj)
+                {
+                    Disposer.Dispose();
+                }
             }
 
             base.Dispose(disposing);
