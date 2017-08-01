@@ -21,7 +21,7 @@ namespace Manualfac
         {
             if (componentRegistry == null) { throw new ArgumentNullException(nameof(componentRegistry));}
             this.componentRegistry = componentRegistry;
-            RootScope = parent ?? this;
+            RootScope = parent?.RootScope ?? this;
         }
 
         public object ResolveComponent(Service service)
@@ -76,7 +76,7 @@ namespace Manualfac
             /*
              * Create a child life-time scope in this method.
              */
-            return new LifetimeScope(componentRegistry, RootScope);
+            return new LifetimeScope(componentRegistry, this);
 
             #endregion
         }
