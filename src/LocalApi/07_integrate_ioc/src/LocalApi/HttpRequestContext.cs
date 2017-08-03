@@ -7,7 +7,8 @@ namespace LocalApi
     {
         public HttpConfiguration Configuration { get; }
         public HttpRoute MatchedRoute { get; }
-        
+        IDependencyScope cachedScope;
+
         public HttpRequestContext(HttpConfiguration configuration, HttpRoute matchedRoute)
         {
             Configuration = configuration;
@@ -27,12 +28,14 @@ namespace LocalApi
          */
         public IDependencyScope GetDependencyScope()
         {
-            throw new NotImplementedException();
+            if(cachedScope != null) return cachedScope;
+            cachedScope = Configuration.DependencyResolver.BeginScope();
+            return cachedScope;
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            cachedScope.Dispose();
         }
 
         #endregion

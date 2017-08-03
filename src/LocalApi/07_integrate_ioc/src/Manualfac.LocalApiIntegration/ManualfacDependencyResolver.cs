@@ -16,22 +16,26 @@ namespace Manualfac.LocalApiIntegration
 
         public ManualfacDependencyResolver(Container rootScope)
         {
-            throw new NotImplementedException();
+            Container = rootScope;
         }
+
+        Container Container { get; }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Container.Dispose();
         }
 
         public object GetService(Type type)
         {
-            throw new NotImplementedException();
+            object resolved;
+            Container.TryResolve(type, out resolved);
+            return resolved;
         }
 
         public IDependencyScope BeginScope()
         {
-            throw new NotImplementedException();
+            return new ManualfacDependencyScope(Container.BeginLifetimeScope());
         }
 
         #endregion
