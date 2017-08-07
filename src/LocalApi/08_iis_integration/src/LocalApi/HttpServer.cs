@@ -33,24 +33,17 @@ namespace LocalApi
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
 
-            #region Please dispose the request context after request processing
-
-            /*
-             * Please find a place to dispose the request context after request processing.
-             */
-
+            HttpResponseMessage response = default(HttpResponseMessage);
             try
             {
                 request.SetRequestContext(configuration, matchedRoute);
-                HttpResponseMessage response = await ControllerActionInvoker.InvokeAction(request);
+                response = await ControllerActionInvoker.InvokeAction(request);
                 return response;
             }
             catch (Exception)
             {
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
-
-            #endregion
         }
 
         protected override void Dispose(bool disposing)

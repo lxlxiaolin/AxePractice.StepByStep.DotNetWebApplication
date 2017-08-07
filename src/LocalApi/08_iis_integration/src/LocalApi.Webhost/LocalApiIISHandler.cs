@@ -28,7 +28,7 @@ namespace LocalApi.Webhost
             {
                 CancellationToken cancellationToken = CancellationToken.None;
                 #region Please integrate LocalAPI with this handler
-
+                response = await server.Value.Process(request, cancellationToken);
                 // Please generate response here.
 
                 #endregion
